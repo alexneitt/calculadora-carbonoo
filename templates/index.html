@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tu Huella de Carbono</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        function actualizarTexto() {
+            const transporte = document.getElementById('transporte');
+            const transporteSeleccionado = transporte.options[transporte.selectedIndex]?.text;
+            const labelKm = document.getElementById("label-kilometros");
+
+            if (transporteSeleccionado) {
+                labelKm.innerText = `Kilómetros semanales usando ${transporteSeleccionado.toLowerCase()}`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <section class="card">
+            <header>
+                <h1>🌿 Calcula tu huella</h1>
+                <p>Descubre cuántos kilos de CO₂ generas cada semana según tu transporte.</p>
+            </header>
+
+            <form method="POST" class="formulario">
+                <div class="grupo">
+                    <label for="transporte">Transporte habitual</label>
+                    <select id="transporte" name="transporte" onchange="actualizarTexto()" required>
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option value="Auto">🚗 Auto</option>
+                        <option value="Moto">🏍️ Moto</option>
+                        <option value="Camión">🚌 Camión / Autobús</option>
+                        <option value="Bicicleta">🚴‍♂️ Bicicleta</option>
+                        <option value="Caminar">🚶 Caminar</option>
+                    </select>
+                </div>
+
+                <div class="grupo">
+                    <label id="label-kilometros" for="kilometros">Kilómetros semanales</label>
+                    <input type="number" id="kilometros" name="kilometros" required step="0.01" min="0">
+                </div>
+
+                <button type="submit">🌱 Calcular</button>
+            </form>
+
+            {% if resultado is not none %}
+                <div class="resultado-box {{ nivel }}">
+                    <p>Tu huella semanal es:</p>
+                    <span>{{ resultado }} kg de CO₂</span>
+                </div>
+            {% endif %}
+        </section>
+
+        <section class="tabla-section">
+            <h2>
+                Interpretación de niveles
+                <span class="help-icon" tabindex="0">?</span>
+            </h2>
+            <table class="tabla-huella">
+                <thead>
+                    <tr>
+                        <th>Nivel</th>
+                        <th>CO₂ semanal (kg)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="excelente">Excelente</td><td>0 - 5</td></tr>
+                    <tr><td class="bueno">Bueno</td><td>5 - 15</td></tr>
+                    <tr><td class="regular">Regular</td><td>15 - 25</td></tr>
+                    <tr><td class="malo">Malo</td><td>25 - 35</td></tr>
+                    <tr><td class="muy-malo">Muy malo</td><td>Más de 35</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>
