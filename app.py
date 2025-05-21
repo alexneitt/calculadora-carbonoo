@@ -8,13 +8,16 @@ FACTORES_EMISION = {
     "Moto": 0.12,
     "Camión": 0.05,
     "Bicicleta": 0.0,
-    "Caminar": 0.0
+    "Caminar": 0.0,
+    "Jet": 3.15
 }
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     resultado = None
     nivel = None
+    transporte = None
+    kilometros = 0
 
     if request.method == 'POST':
         transporte = request.form.get('transporte')
@@ -40,7 +43,7 @@ def index():
             else:
                 nivel = 'muy-malo'
 
-    return render_template('index.html', resultado=resultado, nivel=nivel)
+    return render_template('index.html', resultado=resultado, nivel=nivel, transporte=transporte, kilometros=kilometros)
 
 if __name__ == '__main__':
     app.run(debug=True)

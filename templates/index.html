@@ -6,33 +6,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script>
-        function actualizarTexto() {
-            const transporte = document.getElementById('transporte');
-            const texto = transporte.options[transporte.selectedIndex]?.text || '';
-            document.getElementById("label-kilometros").innerText =
-                `Kilómetros semanales usando ${texto.toLowerCase()}`;
+        function actualizarTexto(nombre) {
+            const label = document.getElementById("label-kilometros");
+            label.innerText = `Kilómetros semanales usando: ${nombre.toLowerCase()}`;
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('input[name="transporte"]').forEach((input) => {
+                input.addEventListener('change', () => actualizarTexto(input.value));
+            });
+        });
     </script>
 </head>
 <body>
     <main class="container">
         <section class="card">
             <header>
-                <h1>🌱 Calculadora de CO₂</h1>
+                <h1 class="titulo">Calculadora de CO₂</h1>
                 <p>Ingresa tu medio de transporte y calcula tu huella de carbono semanal.</p>
             </header>
 
             <form method="POST" class="formulario">
                 <div class="grupo">
                     <label for="transporte">Transporte habitual</label>
-                    <select id="transporte" name="transporte" onchange="actualizarTexto()" required>
-                        <option value="" disabled selected>Selecciona una opción</option>
-                        <option value="Auto">🚗 Auto</option>
-                        <option value="Moto">🏍️ Moto</option>
-                        <option value="Camión">🚌 Camión / Autobús</option>
-                        <option value="Bicicleta">🚴‍♂️ Bicicleta</option>
-                        <option value="Caminar">🚶 Caminar</option>
-                    </select>
+                    <div class="opciones-transporte">
+                        <input type="radio" id="auto" name="transporte" value="Auto" required>
+                        <label for="auto">🚗 Auto</label>
+
+                        <input type="radio" id="moto" name="transporte" value="Moto">
+                        <label for="moto">🏍️ Moto</label>
+
+                        <input type="radio" id="camion" name="transporte" value="Camión">
+                        <label for="camion">🚌 Camión / Autobús</label>
+
+                        <input type="radio" id="bicicleta" name="transporte" value="Bicicleta">
+                        <label for="bicicleta">🚴‍♂️ Bicicleta</label>
+
+                        <input type="radio" id="caminar" name="transporte" value="Caminar">
+                        <label for="caminar">🚶 Caminar</label>
+
+                        <input type="radio" id="jet" name="transporte" value="Jet">
+                        <label for="jet">✈️ Jet</label>
+
+                    </div>
                 </div>
 
                 <div class="grupo">
@@ -40,15 +56,16 @@
                     <input type="number" id="kilometros" name="kilometros" required step="0.1" min="0">
                 </div>
 
-                <button type="submit">Calcular huella 🌍</button>
+                <button type="submit">Calcular huella</button>
             </form>
 
             {% if resultado is not none %}
             <div class="resultado-box {{ nivel }}">
-                <p>Generas aproximadamente:</p>
+                <p>Usando <strong>{{ transporte }}</strong> y recorriendo <strong>{{ kilometros }}</strong> km semanales, generas aproximadamente:</p>
                 <span>{{ resultado }} kg de CO₂ por semana</span>
             </div>
             {% endif %}
+
         </section>
 
         <section class="tabla-section">
