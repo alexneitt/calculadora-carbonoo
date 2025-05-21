@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Factores de emisión por transporte
+# Factores de emisión por tipo de transporte (kg CO₂ por km)
 FACTORES_EMISION = {
     "Auto": 0.21,
     "Moto": 0.12,
@@ -15,16 +15,20 @@ FACTORES_EMISION = {
 def index():
     resultado = None
     nivel = None
+
     if request.method == 'POST':
         transporte = request.form.get('transporte')
-        kilometros = float(request.form.get('kilometros', 0))
+        try:
+            kilometros = float(request.form.get('kilometros', 0))
+        except ValueError:
+            kilometros = 0
 
-        if transporte and kilometros:
-            factor_emision = FACTORES_EMISION.get(transporte, 0)
+        if transporte in FACTORES_EMISION and kilometros >= 0:
+            factor_emision = FACTORES_EMISION[transporte]
             huella_carbono = kilometros * factor_emision
             resultado = round(huella_carbono, 2)
 
-            # Determinar nivel
+            # Determinar nivel según resultado
             if resultado <= 5:
                 nivel = 'excelente'
             elif resultado <= 15:
@@ -40,4 +44,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
- 
