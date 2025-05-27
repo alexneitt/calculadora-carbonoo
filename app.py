@@ -12,6 +12,9 @@ FACTORES_EMISION = {
     "Jet": 3.15
 }
 
+# Lista para almacenar últimas consultas
+ultimas_consultas = []
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     resultado = None
@@ -31,7 +34,7 @@ def index():
             huella_carbono = kilometros * factor_emision
             resultado = round(huella_carbono, 2)
 
-            # Determinar nivel según resultado
+            # Determinar nivel
             if resultado <= 5:
                 nivel = 'excelente'
             elif resultado <= 15:
@@ -43,7 +46,24 @@ def index():
             else:
                 nivel = 'muy-malo'
 
-    return render_template('index.html', resultado=resultado, nivel=nivel, transporte=transporte, kilometros=kilometros)
+            # Guardar la consulta
+            consulta = {
+                'transporte': transporte,
+                'kilometros': kilometros,
+                'resultado': resultado,
+                'nivel': nivel
+            }
+            ultimas_consultas.insert(0, consulta)
+            ultimas_consultas[:] = ultimas_consultas[:5]  # Limita a 5
+
+    return render_template(
+        'index.html',
+        resultado=resultado,
+        nivel=nivel,
+        transporte=transporte,
+        kilometros=kilometros,
+        ultimas_consultas=ultimas_consultas
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -47,7 +47,6 @@
 
                         <input type="radio" id="jet" name="transporte" value="Jet">
                         <label for="jet">✈️ Jet</label>
-
                     </div>
                 </div>
 
@@ -65,7 +64,6 @@
                 <span>{{ resultado }} kg de CO₂ por semana</span>
             </div>
             {% endif %}
-
         </section>
 
         <section class="tabla-section">
@@ -89,6 +87,37 @@
                 </tbody>
             </table>
         </section>
+
+        {% if ultimas_consultas %}
+        <section class="card">
+            <h2 class="titulo">Últimas consultas</h2>
+            <table class="tabla-huella">
+                <thead>
+                    <tr>
+                        <th>Transporte</th>
+                        <th>Kilómetros</th>
+                        <th>CO₂ (kg)</th>
+                        <th>Nivel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consulta in ultimas_consultas %}
+                    <tr>
+                        <td>{{ consulta.transporte }}</td>
+                        <td>{{ consulta.kilometros }}</td>
+                        <td>{{ consulta.resultado }}</td>
+                        <td class="{{ consulta.nivel }}">{{ consulta.nivel.replace('-', ' ').capitalize() }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        {% endif %}
+
     </main>
+
+    <footer class="footer">
+        <p>© 2025 Josue Alexis Ruiz Gutierrez – ITCH II</p>
+    </footer>
 </body>
 </html>

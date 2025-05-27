@@ -8,15 +8,25 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #ecf5f2;
     color: #2c3e50;
-    display: flex;
     justify-content: center;
     padding: 20px;
     min-height: 100vh;
 }
 
 .container {
+    margin: 0 auto;
     width: 100%;
     max-width: 620px;
+}
+
+.footer {
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 15px 0;
+    color: #7f8c8d;
+    border-top: 1px solid #ccc;
 }
 
 .card {
@@ -208,3 +218,7 @@ button:hover {
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
     z-index: 10;
 }
+
+
+
+
