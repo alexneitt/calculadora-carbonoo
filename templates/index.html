@@ -114,6 +114,18 @@
         </section>
         {% endif %}
 
+        <section class="card">
+    <h2 class="titulo">Enviar por correo</h2>
+    <form action="/enviar-correo" method="POST" class="formulario">
+        <div class="grupo">
+            <label for="correo">Correo electrónico</label>
+            <input type="email" id="correo" name="correo" required placeholder="ejemplo@correo.com">
+        </div>
+        <button type="submit">Enviar últimas consultas</button>
+    </form>
+</section>
+
+
     </main>
 
     <footer class="footer">

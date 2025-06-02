@@ -1,6 +1,17 @@
 from flask import Flask, render_template, request
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
+
+# Configuración del correo (usa los datos de tu proveedor SMTP)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'alexisrg620@gmail.com'
+app.config['MAIL_PASSWORD'] = 'knnn jawr cmyh azwd'  # Usa una contraseña de aplicación segura
+app.config['MAIL_DEFAULT_SENDER'] = 'alexisrg620@gmail.com'
+
+mail = Mail(app)
 
 # Factores de emisión por tipo de transporte (kg CO₂ por km)
 FACTORES_EMISION = {
@@ -64,6 +75,37 @@ def index():
         kilometros=kilometros,
         ultimas_consultas=ultimas_consultas
     )
+
+@app.route('/enviar-correo', methods=['POST'])
+def enviar_correo():
+    email_destino = request.form.get('correo')
+
+    if not email_destino:
+        return "Correo no proporcionado", 400
+
+    if not ultimas_consultas:
+        return "No hay consultas para enviar", 400
+
+    cuerpo = "Últimas 5 consultas de huella de carbono:\n\n"
+    for consulta in ultimas_consultas:
+        cuerpo += (
+            f"- Transporte: {consulta['transporte']}\n"
+            f"  Kilómetros: {consulta['kilometros']} km\n"
+            f"  CO₂ generado: {consulta['resultado']} kg\n"
+            f"  Nivel: {consulta['nivel'].replace('-', ' ').capitalize()}\n\n"
+        )
+
+    try:
+        msg = Message(
+            subject="Resumen de huella de carbono",
+            recipients=[email_destino],
+            body=cuerpo
+        )
+        mail.send(msg)
+        return "Correo enviado correctamente"
+    except Exception as e:
+        return f"Error al enviar el correo: {str(e)}", 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
